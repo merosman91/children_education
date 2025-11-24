@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
   try {
     const { db } = await connectToDatabase();
-    const collection = db.collection('curriculum'); // اسم المجموعة
+    const collection = db.collection('Curriculum'); // اسم المجموعة
 
     // جلب جميع المواد
     const subjects = await collection.find({}).toArray();
