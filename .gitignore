@@ -1,0 +1,12 @@
+# الملفات الحساسة
+.env.local
+.env.production 
+
+# مجلدات التكوين والتشغيل
+/node_modules
+/.next/ 
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
