@@ -1,28 +1,27 @@
 // pages/contact.js
 import Head from 'next/head';
 import Link from 'next/link';
-import Layout from '../components/Layout'; // 🚨 تم إضافة استيراد Layout
+import Layout from '../components/Layout'; 
+import React, { useState } from 'react';
 
 // البيانات المُحدثة
 const schoolData = {
   name: "مدرسة الإخلاص",
-  whatsappNumber: "921027104", // الرقم بدون رمز الدولة (السودان)
-  whatsappLink: "https://wa.me/249921027104", // رابط الواتساب برمز الدولة +249
+  whatsappNumber: "921027104", 
+  whatsappLink: "https://wa.me/249921027104", 
   email: "info@alekhlas-school.edu.sd", 
   address: "منطقة أبودوم، مدينة مروي، الولاية الشمالية، السودان.",
-  // إحداثيات افتراضية لمنطقة مروي (يجب تعديلها لتحديد موقع أبودوم بدقة)
   mapEmbedUrl: "http://googleusercontent.com/maps/embed?pb=!1m18!1m12!1m3!1d15446.40209635032!2d31.8797148!3d18.4283996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x143c7438e3e4a9e5%3A0x629c19356885368a!2sMerowe%2C%20Sudan!5e0!3m2!1sen!2sae!4v1703606400000!5m2!1sen!2sae", 
 };
 
 export default function ContactUs() {
   return (
-    <Layout> {/* 🚨 تغليف المحتوى بالـ Layout */}
+    <Layout>
       <Head>
         <title>اتصل بنا | {schoolData.name}</title>
       </Head>
 
       <header style={styles.header}>
-        {/* 🚨 تم حذف رابط العودة للرئيسية لأنه موجود في الـ Navbar */}
         <h1 style={styles.pageTitle}>📞 تواصل معنا</h1>
         <p style={styles.introText}>نحن مستعدون للإجابة على جميع استفساراتكم المتعلقة بالتسجيل والمناهج.</p>
       </header>
@@ -33,7 +32,7 @@ export default function ContactUs() {
         <div style={styles.contactDetails}>
           <ContactItem icon="🟢" title="تواصل عبر الواتساب" value={`+249 ${schoolData.whatsappNumber}`} link={schoolData.whatsappLink} isWhatsapp={true} />
           <ContactItem icon="✉️" title="البريد الإلكتروني" value={schoolData.email} link={`mailto:${schoolData.email}`} />
-          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={`http://maps.google.com/?q=${encodeURIComponent(schoolData.address)}`} isAddress={true} />
+          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={`http://googleusercontent.com/maps.google.com/3{encodeURIComponent(schoolData.address)}`} isAddress={true} />
         </div>
 
         <hr style={styles.divider} />
@@ -57,28 +56,33 @@ export default function ContactUs() {
         </div>
 
       </section>
-
-      {/* 🚨 تم حذف التذييل (Footer) لأنه موجود الآن في Layout */}
     </Layout>
   );
 }
 
-// مكون لبطاقة تفاصيل الاتصال
-const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress = false }) => (
-    <div style={styles.itemCard}>
-        <div style={styles.itemHeader}>
-            <span style={styles.itemIcon}>{icon}</span>
-            <h3 style={styles.itemTitle}>{title}</h3>
+// 📌 مكون لبطاقة تفاصيل الاتصال التفاعلية
+const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress = false }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    return (
+        <div 
+            style={{...styles.itemCard, ...(isHovered ? styles.itemCardHover : {})}}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div style={styles.itemHeader}>
+                <span style={styles.itemIcon}>{icon}</span>
+                <h3 style={styles.itemTitle}>{title}</h3>
+            </div>
+            <a href={link} target="_blank" rel="noopener noreferrer" style={isWhatsapp ? styles.whatsappLink : styles.itemLink}>
+                {value} 
+                {isWhatsapp && ' (انقر لبدء المحادثة)'}
+                {isAddress && ' (شاهد الخريطة)'}
+            </a>
         </div>
-        <a href={link} target="_blank" rel="noopener noreferrer" style={isWhatsapp ? styles.whatsappLink : styles.itemLink}>
-            {value} 
-            {isWhatsapp && ' (انقر لبدء المحادثة)'}
-            {isAddress && ' (شاهد الخريطة)'}
-        </a>
-    </div>
-);
+    );
+};
 
-// مكون نموذج الإرسال عبر الواتساب
+// 📌 مكون نموذج الإرسال عبر الواتساب التفاعلي
 const WhatsappForm = ({ whatsappLink }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -86,38 +90,36 @@ const WhatsappForm = ({ whatsappLink }) => {
         const phone = e.target.phone.value;
         const message = e.target.message.value;
         
-        const fullMessage = `
-        *رسالة استفسار من الموقع الإلكتروني:*
-        الاسم: ${name}
-        رقم الهاتف: ${phone}
-        الرسالة: ${message}
-        `;
-        
+        const fullMessage = `*رسالة استفسار من الموقع الإلكتروني:*\nالاسم: ${name}\nرقم الهاتف: ${phone}\nالرسالة: ${message}`;
         const encodedMessage = encodeURIComponent(fullMessage.trim());
-        const baseUrl = whatsappLink; // https://wa.me/249921027104
-        const whatsappUrl = `${baseUrl}?text=${encodedMessage}`;
+        const whatsappUrl = `${whatsappLink}?text=${encodedMessage}`;
         
         window.open(whatsappUrl, '_blank');
     };
+
+    const [isHovered, setIsHovered] = useState(false);
 
     return (
         <form style={styles.form} onSubmit={handleSubmit}>
             <input type="text" name="name" placeholder="الاسم الكامل" style={styles.input} required />
             <input type="tel" name="phone" placeholder="رقم الهاتف للتواصل (مطلوب)" style={styles.input} required />
-            <textarea name="message" placeholder="رسالتك أو استفسارك (مثل: استفسار عن التسجيل في المرحلة الثانوية)" rows="4" style={styles.textarea} required></textarea>
-            <button type="submit" style={styles.whatsappButton}>إرسال عبر واتساب <span style={{fontSize: '1.2em'}}>💬</span></button>
+            <textarea name="message" placeholder="رسالتك أو استفسارك..." rows="4" style={styles.textarea} required></textarea>
+            <button 
+                type="submit" 
+                style={{...styles.whatsappButton, ...(isHovered ? styles.whatsappButtonHover : {})}}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                إرسال عبر واتساب <span style={{fontSize: '1.2em'}}>💬</span>
+            </button>
             <p style={styles.note}> سيتم فتح تطبيق واتساب مباشرة لإرسال رسالتك.</p>
         </form>
     );
 };
 
 
-// 🎨 أنماط CSS المدمجة (تم حذف أنماط Footer و Font)
+// 🎨 أنماط CSS المدمجة
 const styles = {
-  // تم حذف fontFamily و direction و minHeight لأنهما في Layout
-  container: {
-    backgroundColor: '#f8f9fa',
-  },
   header: {
     backgroundColor: '#eef2f7',
     color: '#333',
@@ -155,6 +157,12 @@ const styles = {
     width: '320px',
     textAlign: 'right',
     borderBottom: '4px solid #0056b3',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+    cursor: 'pointer',
+  },
+  itemCardHover: { // تأثير الـ Hover
+      transform: 'translateY(-3px)',
+      boxShadow: '0 8px 15px rgba(0, 0, 0, 0.15)',
   },
   itemHeader: {
       display: 'flex',
@@ -231,7 +239,12 @@ const styles = {
     fontSize: '1.2em',
     fontWeight: 'bold',
     cursor: 'pointer',
-    transition: 'background-color 0.3s',
+    transition: 'background-color 0.3s, transform 0.2s',
+  },
+  whatsappButtonHover: { // تأثير الـ Hover
+      backgroundColor: '#1e8f49',
+      transform: 'scale(1.02)',
+      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
   },
   note: {
       fontSize: '0.85em',
