@@ -1,52 +1,16 @@
 // pages/index.js
-// 🚨 التعديل: استيراد البيانات مباشرة
-import Head from 'next/head';
-import Link from 'next/link';
-import { curriculum } from '../data/curriculum'; // <--- استيراد من ملف data
+import { curriculum } from '../data/curriculum'; 
 
 export default function Home() {
-  const subjects = curriculum; // <--- استخدام البيانات المستوردة مباشرة
-
-  // لا حاجة لـ useState أو useEffect أو isLoading بعد الآن!
+  const subjects = curriculum; 
   
-  if (subjects.length === 0) {
-    return <div style={{ textAlign: 'center', padding: '100px', fontSize: '1.5em' }}>🚫 لم يتم العثور على أي مواد في ملف curriculum.js.</div>;
+  // 🚨 قم بإضافة هذا الاختبار المؤقت:
+  if (!subjects || subjects.length === 0) {
+    // إذا فشل الاستيراد، اعرض شيئًا مؤقتًا ومختلفًا عن الرسالة الافتراضية
+    return <div style={{ textAlign: 'center', padding: '100px', fontSize: '2em', color: 'purple' }}>
+             ❌ فشل في تحميل البيانات! تحقق من مسار ../data/curriculum.js
+           </div>;
   }
-
-  return (
-    <div style={{ fontFamily: 'Tahoma, sans-serif', textAlign: 'right', direction: 'rtl', padding: '20px', minHeight: '100vh', backgroundColor: '#f0f8ff' }}>
-      <Head>
-        <title>منصة التعليم الممتع للأطفال</title>
-      </Head>
-
-      <h1 style={{ color: '#0070f3', textAlign: 'center' }}>مرحباً بك في منصة التعلم! 🚀</h1>
-      <p style={{ textAlign: 'center', color: '#333' }}>اختر المادة التي تود البدء في تعلمها اليوم:</p>
-
-      <div style={{ 
-        display: 'flex', 
-        flexWrap: 'wrap', 
-        justifyContent: 'center', 
-        gap: '20px', 
-        marginTop: '40px' 
-      }}>
-        {subjects.map(subjectData => {
-          const subjectKey = subjectData.subjectId; 
-          const firstLevelId = subjectData.levels && subjectData.levels.length > 0 
-                               ? subjectData.levels[0].levelId 
-                               : '#';
-          
-          return (
-            <Link 
-              key={subjectKey} 
-              href={`/lesson/${subjectKey}/${firstLevelId}`} 
-              style={{ textDecoration: 'none' }}
-            >
-              {/* ... (بقية كود بطاقة المادة) ... */}
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  );
+  
+  // ... (بقية الكود: return <div style={{ ... }}> مرحباً بك... </div>) ...
 }
- 
