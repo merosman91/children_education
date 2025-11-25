@@ -1,6 +1,7 @@
 // pages/contact.js
 import Head from 'next/head';
 import Link from 'next/link';
+import Layout from '../components/Layout'; // 🚨 تم إضافة استيراد Layout
 
 // البيانات المُحدثة
 const schoolData = {
@@ -10,18 +11,18 @@ const schoolData = {
   email: "info@alekhlas-school.edu.sd", 
   address: "منطقة أبودوم، مدينة مروي، الولاية الشمالية، السودان.",
   // إحداثيات افتراضية لمنطقة مروي (يجب تعديلها لتحديد موقع أبودوم بدقة)
-  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115820.739775953!2d31.78912065876008!3d18.49880860888998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4e13.1!3m3!1m2!1s0x145a32b0a340b171%3A0x8f3c713b14068579!2z2KzZg9mF2LE!5e0!3m2!1sar!2ssd!4v1700000000000!5m2!1sar!2ssd", 
+  mapEmbedUrl: "http://googleusercontent.com/maps/embed?pb=!1m18!1m12!1m3!1d15446.40209635032!2d31.8797148!3d18.4283996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x143c7438e3e4a9e5%3A0x629c19356885368a!2sMerowe%2C%20Sudan!5e0!3m2!1sen!2sae!4v1703606400000!5m2!1sen!2sae", 
 };
 
 export default function ContactUs() {
   return (
-    <div style={styles.container}>
+    <Layout> {/* 🚨 تغليف المحتوى بالـ Layout */}
       <Head>
         <title>اتصل بنا | {schoolData.name}</title>
       </Head>
 
       <header style={styles.header}>
-        <Link href="/" style={styles.homeLink}>← العودة للرئيسية</Link>
+        {/* 🚨 تم حذف رابط العودة للرئيسية لأنه موجود في الـ Navbar */}
         <h1 style={styles.pageTitle}>📞 تواصل معنا</h1>
         <p style={styles.introText}>نحن مستعدون للإجابة على جميع استفساراتكم المتعلقة بالتسجيل والمناهج.</p>
       </header>
@@ -30,19 +31,16 @@ export default function ContactUs() {
         
         {/* معلومات الاتصال الأساسية */}
         <div style={styles.contactDetails}>
-          {/* تم تحويله إلى الواتساب */}
           <ContactItem icon="🟢" title="تواصل عبر الواتساب" value={`+249 ${schoolData.whatsappNumber}`} link={schoolData.whatsappLink} isWhatsapp={true} />
-          
           <ContactItem icon="✉️" title="البريد الإلكتروني" value={schoolData.email} link={`mailto:${schoolData.email}`} />
-          
-          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={schoolData.mapEmbedUrl} isAddress={true} />
+          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={`http://maps.google.com/?q=${encodeURIComponent(schoolData.address)}`} isAddress={true} />
         </div>
 
         <hr style={styles.divider} />
         
         {/* نموذج الإرسال عبر الواتساب */}
         <h2 style={styles.sectionTitle}>أرسل رسالة عبر الواتساب</h2>
-        <WhatsappForm />
+        <WhatsappForm whatsappLink={schoolData.whatsappLink.split('?')[0]} />
         
         {/* خريطة جوجل */}
         <h2 style={styles.sectionTitle}>موقعنا على الخريطة</h2>
@@ -60,10 +58,8 @@ export default function ContactUs() {
 
       </section>
 
-      <footer style={styles.footer}>
-        <p>نتطلع للترحيب بكم في مجتمع مدرسة الإخلاص التعليمي.</p>
-      </footer>
-    </div>
+      {/* 🚨 تم حذف التذييل (Footer) لأنه موجود الآن في Layout */}
+    </Layout>
   );
 }
 
@@ -83,7 +79,7 @@ const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress =
 );
 
 // مكون نموذج الإرسال عبر الواتساب
-const WhatsappForm = () => {
+const WhatsappForm = ({ whatsappLink }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const name = e.target.name.value;
@@ -98,7 +94,8 @@ const WhatsappForm = () => {
         `;
         
         const encodedMessage = encodeURIComponent(fullMessage.trim());
-        const whatsappUrl = `https://wa.me/249921027104?text=${encodedMessage}`;
+        const baseUrl = whatsappLink; // https://wa.me/249921027104
+        const whatsappUrl = `${baseUrl}?text=${encodedMessage}`;
         
         window.open(whatsappUrl, '_blank');
     };
@@ -115,34 +112,23 @@ const WhatsappForm = () => {
 };
 
 
-// 🎨 أنماط CSS المدمجة
+// 🎨 أنماط CSS المدمجة (تم حذف أنماط Footer و Font)
 const styles = {
+  // تم حذف fontFamily و direction و minHeight لأنهما في Layout
   container: {
-    fontFamily: 'Cairo, Tahoma, Arial, sans-serif',
-    direction: 'rtl',
-    textAlign: 'right',
     backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
   },
   header: {
-    backgroundColor: '#0056b3',
-    color: 'white',
+    backgroundColor: '#eef2f7',
+    color: '#333',
     padding: '30px 20px 50px 20px',
     textAlign: 'center',
     position: 'relative',
   },
-  homeLink: {
-    position: 'absolute',
-    top: '15px',
-    right: '20px',
-    color: 'white',
-    textDecoration: 'none',
-    fontSize: '1em',
-    opacity: 0.8,
-  },
   pageTitle: {
     fontSize: '2.5em',
     marginBottom: '10px',
+    color: '#0056b3',
   },
   introText: {
     fontSize: '1.2em',
@@ -238,7 +224,7 @@ const styles = {
   },
   whatsappButton: {
     padding: '15px',
-    backgroundColor: '#25D366', // أخضر الواتساب
+    backgroundColor: '#25D366', 
     color: 'white',
     border: 'none',
     borderRadius: '50px',
@@ -259,10 +245,4 @@ const styles = {
       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
       marginBottom: '40px',
   },
-  footer: {
-    textAlign: 'center',
-    padding: '30px',
-    fontSize: '0.9em',
-    color: '#6c757d',
-  }
 };
