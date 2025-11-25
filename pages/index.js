@@ -1,34 +1,16 @@
 // pages/index.js
-import { useState, useEffect } from 'react';
+// 🚨 التعديل: استيراد البيانات مباشرة
 import Head from 'next/head';
 import Link from 'next/link';
+import { curriculum } from '../data/curriculum'; // <--- استيراد من ملف data
 
 export default function Home() {
-  const [subjects, setSubjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const subjects = curriculum; // <--- استخدام البيانات المستوردة مباشرة
 
-  // جلب البيانات من API
-  useEffect(() => {
-    async function fetchSubjects() {
-      try {
-        const response = await fetch('/api/curriculum');
-        const data = await response.json();
-        setSubjects(data);
-      } catch (error) {
-        console.error("Failed to fetch subjects:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchSubjects();
-  }, []);
-
-  if (isLoading) {
-    return <div style={{ textAlign: 'center', padding: '100px', fontSize: '1.5em' }}>جاري تحميل المواد... ⏳</div>;
-  }
+  // لا حاجة لـ useState أو useEffect أو isLoading بعد الآن!
   
   if (subjects.length === 0) {
-    return <div style={{ textAlign: 'center', padding: '100px', fontSize: '1.5em' }}>🚫 لم يتم العثور على أي مواد في قاعدة البيانات. يرجى إدخال البيانات في MongoDB Atlas.</div>;
+    return <div style={{ textAlign: 'center', padding: '100px', fontSize: '1.5em' }}>🚫 لم يتم العثور على أي مواد في ملف curriculum.js.</div>;
   }
 
   return (
@@ -49,10 +31,9 @@ export default function Home() {
       }}>
         {subjects.map(subjectData => {
           const subjectKey = subjectData.subjectId; 
-          // للتأكد من وجود مستويات وبدء التدرج من المستوى الأول
           const firstLevelId = subjectData.levels && subjectData.levels.length > 0 
                                ? subjectData.levels[0].levelId 
-                               : '#'; // وضع # إذا لم يكن هناك مستويات
+                               : '#';
           
           return (
             <Link 
@@ -60,24 +41,7 @@ export default function Home() {
               href={`/lesson/${subjectKey}/${firstLevelId}`} 
               style={{ textDecoration: 'none' }}
             >
-              <div style={{
-                backgroundColor: 'white',
-                padding: '30px',
-                borderRadius: '15px',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                width: '200px',
-                textAlign: 'center',
-                transition: 'transform 0.2s',
-                cursor: 'pointer',
-                border: '3px solid #0070f3'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-              onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                <div style={{ fontSize: '4em', marginBottom: '10px' }}>{subjectData.icon}</div>
-                <h3 style={{ color: '#0070f3' }}>{subjectData.name_ar}</h3>
-                <p style={{ fontSize: '0.9em', color: '#666' }}>انقر للبدء من الأساسيات</p>
-              </div>
+              {/* ... (بقية كود بطاقة المادة) ... */}
             </Link>
           );
         })}
@@ -85,3 +49,4 @@ export default function Home() {
     </div>
   );
 }
+ 
