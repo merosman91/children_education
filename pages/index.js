@@ -1,7 +1,8 @@
 // pages/index.js
 import Head from 'next/head';
 import Link from 'next/link';
-import Layout from '../components/Layout'; // 🚨 تم إضافة استيراد Layout
+import Layout from '../components/Layout'; 
+import React, { useState } from 'react'; // 🚨 لاستخدام حالة الـ hover
 
 // البيانات الأساسية
 const schoolData = {
@@ -12,7 +13,7 @@ const schoolData = {
 
 export default function Home() {
   return (
-    <Layout> {/* 🚨 تغليف المحتوى بالـ Layout */}
+    <Layout> 
       <Head>
         <title>{schoolData.name} | أبودوم، السودان</title>
         <meta name="description" content={`الموقع الرسمي لمدرسة الإخلاص بأبودوم، المراحل الابتدائية والمتوسطة والثانوية (بنين وبنات).`} />
@@ -31,10 +32,9 @@ export default function Home() {
             </p>
             <p style={styles.location}>{schoolData.location}</p>
             
-            {/* زر التوجيه للبرامج الأكاديمية */}
-            <Link href="/academic-programs" style={styles.ctaButton}>
+            <InteractiveLink href="/academic-programs" buttonStyle={styles.ctaButton} hoverStyle={styles.ctaButtonHover}>
               استكشف برامجنا الأكاديمية
-            </Link>
+            </InteractiveLink>
         </div>
       </header>
 
@@ -52,32 +52,52 @@ export default function Home() {
       <section style={{...styles.section, backgroundColor: '#f0f4f8'}}>
         <h2 style={styles.sectionTitle}>منصة الطالب الرقمية</h2>
         <p style={styles.mottoText}>نوفر لطلابنا منصة رقمية لمراجعة المقررات الدراسية واختبار فهمهم في جميع المواد.</p>
-        <Link href="/study-app" style={styles.secondaryButton}>
+        <InteractiveLink href="/study-app" buttonStyle={styles.secondaryButton} hoverStyle={styles.secondaryButtonHover}>
           انطلق إلى تطبيق المذاكرة <span style={{fontSize: '1.2em'}}>🚀</span>
-        </Link>
+        </InteractiveLink>
       </section>
 
-      {/* 🚨 تم حذف التذييل (Footer) لأنه موجود الآن في Layout */}
     </Layout>
   );
 }
 
-// مكون بطاقة المرحلة التعليمية (Component)
-const StageCard = ({ title, icon, description, color }) => (
-  <div style={{...styles.card, borderTopColor: color}}>
-    <div style={styles.cardIcon}>{icon}</div>
-    <h3 style={{...styles.cardTitle, color: color}}>{title}</h3>
-    <p style={styles.cardDescription}>{description}</p>
-  </div>
-);
+// 📌 مكون الرابط التفاعلي (لتحسين UX)
+const InteractiveLink = ({ href, children, buttonStyle, hoverStyle }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <Link 
+      href={href} 
+      style={{...buttonStyle, ...(isHovered ? hoverStyle : {})}}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {children}
+    </Link>
+  );
+};
 
-// 🎨 أنماط CSS المدمجة (تم حذف أنماط Footer و Font)
+// 📌 مكون بطاقة المرحلة التفاعلية (لتحسين UX)
+const StageCard = ({ title, icon, description, color }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    return (
+        <div 
+            style={{
+                ...styles.card, 
+                borderTopColor: color,
+                ...(isHovered ? styles.cardHover : {})
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div style={styles.cardIcon}>{icon}</div>
+            <h3 style={{...styles.cardTitle, color: color}}>{title}</h3>
+            <p style={styles.cardDescription}>{description}</p>
+        </div>
+    );
+};
+
+// 🎨 أنماط CSS المدمجة
 const styles = {
-  // تم حذف fontFamily و direction و minHeight لأنهما في Layout
-  container: {
-    backgroundColor: '#ffffff', 
-    color: '#333',
-  },
   header: {
     backgroundColor: '#0056b3', 
     color: 'white',
@@ -103,6 +123,10 @@ const styles = {
     fontSize: '3.5em',
     marginBottom: '5px',
     fontWeight: '800', 
+    // استجابة لشاشات الهواتف
+    '@media (maxWidth: 600px)': {
+        fontSize: '2.5em',
+    },
   },
   subtitle: {
     fontSize: '1.8em',
@@ -118,6 +142,7 @@ const styles = {
     opacity: 0.9,
     marginBottom: '40px',
   },
+  // 🟢 زر العمل الرئيسي (CTA Button)
   ctaButton: {
     display: 'inline-block',
     marginTop: '20px',
@@ -129,6 +154,12 @@ const styles = {
     fontSize: '1.2em',
     fontWeight: 'bold',
     transition: 'background-color 0.3s, transform 0.2s',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+  },
+  ctaButtonHover: { // تأثير الـ Hover
+      backgroundColor: '#1e7e34', 
+      transform: 'translateY(-2px) scale(1.02)',
+      boxShadow: '0 6px 15px rgba(0, 0, 0, 0.3)',
   },
   section: {
     padding: '60px 20px',
@@ -146,14 +177,20 @@ const styles = {
     gap: '40px',
     flexWrap: 'wrap',
   },
+  // 📦 بطاقة المرحلة التعليمية
   card: {
     backgroundColor: 'white',
     borderRadius: '12px',
     boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
     padding: '30px',
     width: '320px',
-    transition: 'transform 0.3s',
+    transition: 'transform 0.3s, box-shadow 0.3s',
     borderTop: '8px solid',
+    cursor: 'pointer',
+  },
+  cardHover: { // تأثير الـ Hover
+      transform: 'translateY(-5px)',
+      boxShadow: '0 12px 30px rgba(0, 0, 0, 0.25)',
   },
   cardIcon: {
     fontSize: '3.5em',
@@ -172,16 +209,22 @@ const styles = {
       fontSize: '1.2em',
       color: '#444'
   },
+  // 🟣 زر التطبيق التعليمي
   secondaryButton: {
     display: 'inline-block',
     marginTop: '20px',
     padding: '15px 30px',
-    backgroundColor: '#6c757d', 
+    backgroundColor: '#6f42c1', // بنفسجي
     color: 'white',
     textDecoration: 'none',
     borderRadius: '50px',
     fontSize: '1.1em',
     fontWeight: 'bold',
     transition: 'background-color 0.3s',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.15)',
   },
+  secondaryButtonHover: { // تأثير الـ Hover
+      backgroundColor: '#5a369e',
+      transform: 'scale(1.05)',
+  }
 };
