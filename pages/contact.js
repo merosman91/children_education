@@ -2,12 +2,15 @@
 import Head from 'next/head';
 import Link from 'next/link';
 
+// البيانات المُحدثة
 const schoolData = {
   name: "مدرسة الإخلاص",
-  phone: "+249 (XXX) XXXX XXX", // رقم هاتف المدرسة الرئيسي
-  email: "info@alekhlas-school.edu.sd", // بريد إلكتروني افتراضي
+  whatsappNumber: "921027104", // الرقم بدون رمز الدولة (السودان)
+  whatsappLink: "https://wa.me/249921027104", // رابط الواتساب برمز الدولة +249
+  email: "info@alekhlas-school.edu.sd", 
   address: "منطقة أبودوم، مدينة مروي، الولاية الشمالية، السودان.",
-  mapLink: "https://maps.app.goo.gl/example-location-in-marawi", // رابط افتراضي لموقع المدرسة على الخريطة
+  // إحداثيات افتراضية لمنطقة مروي (يجب تعديلها لتحديد موقع أبودوم بدقة)
+  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115820.739775953!2d31.78912065876008!3d18.49880860888998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4e13.1!3m3!1m2!1s0x145a32b0a340b171%3A0x8f3c713b14068579!2z2KzZg9mF2LE!5e0!3m2!1sar!2ssd!4v1700000000000!5m2!1sar!2ssd", 
 };
 
 export default function ContactUs() {
@@ -18,7 +21,7 @@ export default function ContactUs() {
       </Head>
 
       <header style={styles.header}>
-        <Link href="/" style={styles.homeLink}>&larr; العودة للرئيسية</Link>
+        <Link href="/" style={styles.homeLink}>← العودة للرئيسية</Link>
         <h1 style={styles.pageTitle}>📞 تواصل معنا</h1>
         <p style={styles.introText}>نحن مستعدون للإجابة على جميع استفساراتكم المتعلقة بالتسجيل والمناهج.</p>
       </header>
@@ -27,16 +30,33 @@ export default function ContactUs() {
         
         {/* معلومات الاتصال الأساسية */}
         <div style={styles.contactDetails}>
-          <ContactItem icon="☎️" title="رقم الهاتف الأساسي" value={schoolData.phone} link={`tel:${schoolData.phone.replace(/[\s\(\)]/g, '')}`} />
+          {/* تم تحويله إلى الواتساب */}
+          <ContactItem icon="🟢" title="تواصل عبر الواتساب" value={`+249 ${schoolData.whatsappNumber}`} link={schoolData.whatsappLink} isWhatsapp={true} />
+          
           <ContactItem icon="✉️" title="البريد الإلكتروني" value={schoolData.email} link={`mailto:${schoolData.email}`} />
-          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={schoolData.mapLink} isMap={true} />
+          
+          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={schoolData.mapEmbedUrl} isAddress={true} />
         </div>
 
         <hr style={styles.divider} />
         
-        {/* نموذج الاتصال (واجهة فقط) */}
-        <h2 style={styles.sectionTitle}>أرسل رسالة</h2>
-        <ContactForm />
+        {/* نموذج الإرسال عبر الواتساب */}
+        <h2 style={styles.sectionTitle}>أرسل رسالة عبر الواتساب</h2>
+        <WhatsappForm />
+        
+        {/* خريطة جوجل */}
+        <h2 style={styles.sectionTitle}>موقعنا على الخريطة</h2>
+        <div style={styles.mapContainer}>
+            <iframe
+                src={schoolData.mapEmbedUrl}
+                width="100%"
+                height="450"
+                style={{ border: 0, borderRadius: '10px' }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+        </div>
 
       </section>
 
@@ -48,46 +68,64 @@ export default function ContactUs() {
 }
 
 // مكون لبطاقة تفاصيل الاتصال
-const ContactItem = ({ icon, title, value, link, isMap = false }) => (
+const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress = false }) => (
     <div style={styles.itemCard}>
         <div style={styles.itemHeader}>
             <span style={styles.itemIcon}>{icon}</span>
             <h3 style={styles.itemTitle}>{title}</h3>
         </div>
-        {isMap ? (
-            <a href={link} target="_blank" rel="noopener noreferrer" style={styles.itemLink}>
-                {value} (افتح الخريطة)
-            </a>
-        ) : (
-            <a href={link} style={styles.itemLink}>{value}</a>
-        )}
+        <a href={link} target="_blank" rel="noopener noreferrer" style={isWhatsapp ? styles.whatsappLink : styles.itemLink}>
+            {value} 
+            {isWhatsapp && ' (انقر لبدء المحادثة)'}
+            {isAddress && ' (شاهد الخريطة)'}
+        </a>
     </div>
 );
 
-// مكون لنموذج الاتصال (لواجهة العرض فقط - يتطلب معالجة خلفية)
-const ContactForm = () => (
-    <form style={styles.form}>
-        <input type="text" placeholder="الاسم الكامل" style={styles.input} required />
-        <input type="email" placeholder="البريد الإلكتروني" style={styles.input} required />
-        <input type="tel" placeholder="رقم الهاتف" style={styles.input} />
-        <textarea placeholder="رسالتك" rows="5" style={styles.textarea} required></textarea>
-        <button type="submit" style={styles.submitButton}>إرسال الرسالة</button>
-        <p style={styles.note}>ملاحظة: هذا النموذج هو واجهة عرض ويتطلب خدمة خارجية (مثل Formspree أو Vercel Forms) لمعالجة الرسائل.</p>
-    </form>
-);
+// مكون نموذج الإرسال عبر الواتساب
+const WhatsappForm = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const name = e.target.name.value;
+        const phone = e.target.phone.value;
+        const message = e.target.message.value;
+        
+        const fullMessage = `
+        *رسالة استفسار من الموقع الإلكتروني:*
+        الاسم: ${name}
+        رقم الهاتف: ${phone}
+        الرسالة: ${message}
+        `;
+        
+        const encodedMessage = encodeURIComponent(fullMessage.trim());
+        const whatsappUrl = `https://wa.me/249921027104?text=${encodedMessage}`;
+        
+        window.open(whatsappUrl, '_blank');
+    };
+
+    return (
+        <form style={styles.form} onSubmit={handleSubmit}>
+            <input type="text" name="name" placeholder="الاسم الكامل" style={styles.input} required />
+            <input type="tel" name="phone" placeholder="رقم الهاتف للتواصل (مطلوب)" style={styles.input} required />
+            <textarea name="message" placeholder="رسالتك أو استفسارك (مثل: استفسار عن التسجيل في المرحلة الثانوية)" rows="4" style={styles.textarea} required></textarea>
+            <button type="submit" style={styles.whatsappButton}>إرسال عبر واتساب <span style={{fontSize: '1.2em'}}>💬</span></button>
+            <p style={styles.note}> سيتم فتح تطبيق واتساب مباشرة لإرسال رسالتك.</p>
+        </form>
+    );
+};
 
 
 // 🎨 أنماط CSS المدمجة
 const styles = {
   container: {
-    fontFamily: 'Tahoma, Arial, sans-serif',
+    fontFamily: 'Cairo, Tahoma, Arial, sans-serif',
     direction: 'rtl',
     textAlign: 'right',
     backgroundColor: '#f8f9fa',
     minHeight: '100vh',
   },
   header: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#0056b3',
     color: 'white',
     padding: '30px 20px 50px 20px',
     textAlign: 'center',
@@ -113,7 +151,7 @@ const styles = {
   },
   contentSection: {
     padding: '40px 20px',
-    maxWidth: '1000px',
+    maxWidth: '1200px',
     margin: '0 auto',
   },
   contactDetails: {
@@ -127,9 +165,10 @@ const styles = {
     backgroundColor: 'white',
     padding: '25px',
     borderRadius: '10px',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.05)',
-    width: '300px',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.08)',
+    width: '320px',
     textAlign: 'right',
+    borderBottom: '4px solid #0056b3',
   },
   itemHeader: {
       display: 'flex',
@@ -141,8 +180,9 @@ const styles = {
       marginRight: '10px'
   },
   itemTitle: {
-      fontSize: '1.2em',
-      color: '#007bff'
+      fontSize: '1.3em',
+      color: '#0056b3',
+      fontWeight: 'bold',
   },
   itemLink: {
     display: 'block',
@@ -152,15 +192,24 @@ const styles = {
     textDecoration: 'none',
     fontWeight: 'bold',
   },
+  whatsappLink: {
+    display: 'block',
+    marginTop: '10px',
+    fontSize: '1.1em',
+    color: '#25D366',
+    textDecoration: 'none',
+    fontWeight: 'bold',
+  },
   sectionTitle: {
     fontSize: '2em',
-    color: '#007bff',
+    color: '#0056b3',
     marginBottom: '30px',
     textAlign: 'center',
+    fontWeight: '700',
   },
   divider: {
       border: '0',
-      borderTop: '1px solid #ddd',
+      borderTop: '1px solid #ccc',
       margin: '40px 0',
   },
   form: {
@@ -172,7 +221,7 @@ const styles = {
     borderRadius: '10px',
     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
     maxWidth: '600px',
-    margin: '0 auto',
+    margin: '0 auto 40px auto',
   },
   input: {
     padding: '12px',
@@ -187,25 +236,32 @@ const styles = {
     fontSize: '1em',
     resize: 'vertical',
   },
-  submitButton: {
-    padding: '12px',
-    backgroundColor: '#28a745',
+  whatsappButton: {
+    padding: '15px',
+    backgroundColor: '#25D366', // أخضر الواتساب
     color: 'white',
     border: 'none',
-    borderRadius: '5px',
-    fontSize: '1.1em',
+    borderRadius: '50px',
+    fontSize: '1.2em',
+    fontWeight: 'bold',
     cursor: 'pointer',
     transition: 'background-color 0.3s',
   },
   note: {
       fontSize: '0.85em',
-      color: '#dc3545',
+      color: '#444',
       textAlign: 'center',
       marginTop: '10px',
   },
+  mapContainer: {
+      borderRadius: '10px',
+      overflow: 'hidden',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+      marginBottom: '40px',
+  },
   footer: {
     textAlign: 'center',
-    padding: '20px',
+    padding: '30px',
     fontSize: '0.9em',
     color: '#6c757d',
   }
