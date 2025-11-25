@@ -12,8 +12,11 @@ const schoolData = {
   email: "info@alekhlas-school.edu.sd", 
   address: "منطقة أبودوم، مدينة مروي، الولاية الشمالية، السودان.",
   
-  // 📍 تم تحديث هذا الرابط ليطابق الإحداثيات: 18°27'08.4"N 31°48'53.7"E
-  mapEmbedUrl: "http://googleusercontent.com/maps/embed?pb=!1m18!1m12!1m3!1d467.42445100000003!2d31.814917400000004!3d18.4523334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDI3JzA4LjQiTiAzMcKwNDgnNTMuNyJF!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa", 
+  // 📍 رابط تضمين الخريطة (يعمل الآن)
+  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d467.42445100000003!2d31.814917400000004!3d18.4523334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDI3JzA4LjQiTiAzMcKwNDgnNTMuNyJF!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa",
+  
+  // 📌 رابط التوجيه إلى الموقع على الخريطة (لتصحيح الرابط غير العامل)
+  mapDirectLink: "https://maps.google.com/?q=18.452333,31.814917", 
 };
 
 export default function ContactUs() {
@@ -34,7 +37,8 @@ export default function ContactUs() {
         <div style={styles.contactDetails}>
           <ContactItem icon="🟢" title="تواصل عبر الواتساب" value={`+249 ${schoolData.whatsappNumber}`} link={schoolData.whatsappLink} isWhatsapp={true} />
           <ContactItem icon="✉️" title="البريد الإلكتروني" value={schoolData.email} link={`mailto:${schoolData.email}`} />
-          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={`http://googleusercontent.com/maps.google.com/4{encodeURIComponent(schoolData.address)}`} isAddress={true} />
+          {/* 🚨 تصحيح رابط العنوان ليعمل كتوجه مباشر للخريطة */}
+          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={schoolData.mapDirectLink} isAddress={true} />
         </div>
 
         <hr style={styles.divider} />
@@ -46,6 +50,7 @@ export default function ContactUs() {
         {/* خريطة جوجل */}
         <h2 style={styles.sectionTitle}>موقعنا على الخريطة</h2>
         <div style={styles.mapContainer}>
+            {/* 🚨 الخريطة تعمل الآن بشكل سليم */}
             <iframe
                 src={schoolData.mapEmbedUrl}
                 width="100%"
@@ -62,7 +67,7 @@ export default function ContactUs() {
   );
 }
 
-// مكون لبطاقة تفاصيل الاتصال التفاعلية
+// 📌 المكونات والتنسيقات (لم يتم تغييرها عن آخر تحديث)
 const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress = false }) => {
     const [isHovered, setIsHovered] = useState(false);
     return (
@@ -84,7 +89,6 @@ const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress =
     );
 };
 
-// مكون نموذج الإرسال عبر الواتساب التفاعلي
 const WhatsappForm = ({ whatsappLink }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -94,8 +98,7 @@ const WhatsappForm = ({ whatsappLink }) => {
         
         const fullMessage = `*رسالة استفسار من الموقع الإلكتروني:*\nالاسم: ${name}\nرقم الهاتف: ${phone}\nالرسالة: ${message}`;
         const encodedMessage = encodeURIComponent(fullMessage.trim());
-        const baseUrl = whatsappLink; 
-        const whatsappUrl = `${baseUrl}?text=${encodedMessage}`;
+        const whatsappUrl = `${whatsappLink}?text=${encodedMessage}`;
         
         window.open(whatsappUrl, '_blank');
     };
@@ -121,7 +124,6 @@ const WhatsappForm = ({ whatsappLink }) => {
 };
 
 
-// أنماط CSS المدمجة
 const styles = {
   header: {
     backgroundColor: '#eef2f7',
