@@ -1,6 +1,7 @@
 // pages/index.js
 import Head from 'next/head';
 import Link from 'next/link';
+import Layout from '../components/Layout'; // 🚨 تم إضافة استيراد Layout
 
 // البيانات الأساسية
 const schoolData = {
@@ -11,7 +12,7 @@ const schoolData = {
 
 export default function Home() {
   return (
-    <div style={styles.container}>
+    <Layout> {/* 🚨 تغليف المحتوى بالـ Layout */}
       <Head>
         <title>{schoolData.name} | أبودوم، السودان</title>
         <meta name="description" content={`الموقع الرسمي لمدرسة الإخلاص بأبودوم، المراحل الابتدائية والمتوسطة والثانوية (بنين وبنات).`} />
@@ -30,7 +31,7 @@ export default function Home() {
             </p>
             <p style={styles.location}>{schoolData.location}</p>
             
-            {/* زر التوجيه للتطبيق التعليمي */}
+            {/* زر التوجيه للبرامج الأكاديمية */}
             <Link href="/academic-programs" style={styles.ctaButton}>
               استكشف برامجنا الأكاديمية
             </Link>
@@ -56,12 +57,8 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* 4. تذييل الصفحة */}
-      <footer style={styles.footer}>
-        <p>&copy; {new Date().getFullYear()} {schoolData.name}. جميع الحقوق محفوظة.</p>
-        <p>مروي، أبودوم | الولاية الشمالية</p>
-      </footer>
-    </div>
+      {/* 🚨 تم حذف التذييل (Footer) لأنه موجود الآن في Layout */}
+    </Layout>
   );
 }
 
@@ -74,18 +71,15 @@ const StageCard = ({ title, icon, description, color }) => (
   </div>
 );
 
-// 🎨 أنماط CSS المدمجة
+// 🎨 أنماط CSS المدمجة (تم حذف أنماط Footer و Font)
 const styles = {
+  // تم حذف fontFamily و direction و minHeight لأنهما في Layout
   container: {
-    fontFamily: 'Cairo, Tahoma, Arial, sans-serif', // استخدام خط عربي أفضل
-    direction: 'rtl',
-    textAlign: 'right',
-    backgroundColor: '#ffffff', // خلفية بيضاء
-    minHeight: '100vh',
+    backgroundColor: '#ffffff', 
     color: '#333',
   },
   header: {
-    backgroundColor: '#0056b3', // لون أزرق غامق أقوى
+    backgroundColor: '#0056b3', 
     color: 'white',
     padding: '80px 20px',
     textAlign: 'center',
@@ -108,7 +102,7 @@ const styles = {
   title: {
     fontSize: '3.5em',
     marginBottom: '5px',
-    fontWeight: '800', // خط أكثر وضوحًا
+    fontWeight: '800', 
   },
   subtitle: {
     fontSize: '1.8em',
@@ -117,7 +111,7 @@ const styles = {
   },
   highlightText: {
     fontWeight: 'bold',
-    color: '#ffc107', // لون ذهبي للتمييز
+    color: '#ffc107', 
   },
   location: {
     fontSize: '1.1em',
@@ -128,7 +122,7 @@ const styles = {
     display: 'inline-block',
     marginTop: '20px',
     padding: '15px 35px',
-    backgroundColor: '#28a745', // أخضر للتسجيل/العمل
+    backgroundColor: '#28a745', 
     color: 'white',
     textDecoration: 'none',
     borderRadius: '50px',
@@ -182,19 +176,12 @@ const styles = {
     display: 'inline-block',
     marginTop: '20px',
     padding: '15px 30px',
-    backgroundColor: '#6c757d', // رمادي
+    backgroundColor: '#6c757d', 
     color: 'white',
     textDecoration: 'none',
     borderRadius: '50px',
     fontSize: '1.1em',
     fontWeight: 'bold',
     transition: 'background-color 0.3s',
-  },
-  footer: {
-    backgroundColor: '#343a40',
-    color: 'white',
-    textAlign: 'center',
-    padding: '30px',
-    fontSize: '1em',
   },
 };
