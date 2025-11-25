@@ -1,120 +1,211 @@
 // pages/about.js
 import Head from 'next/head';
 import Layout from '../components/Layout';
+import React, { useState } from 'react';
 
-const schoolInfo = {
-  vision: "أن نكون منارة تعليمية رائدة في الولاية الشمالية، ونساهم في بناء جيل سوداني واعٍ ومؤهل للتنافس العالمي، محافظاً على قيم مجتمعه.",
-  mission: "توفير بيئة تعليمية محفزة وشاملة، تركز على التفوق الأكاديمي، وتنمية المهارات القيادية، وتعزيز القيم الإسلامية والسودانية الأصيلة لدى جميع طلابنا وطالباتنا في المراحل الثلاث.",
-  history: "تأسست مدرسة الإخلاص في منطقة أبودوم بمدينة مروي في عام [عام التأسيس]، إيماناً بأهمية التعليم النوعي لأبناء المنطقة، وقد تطورت لتشمل المراحل الابتدائية والمتوسطة والثانوية للبنين والبنات.",
+const schoolName = "مدرسة الإخلاص";
+
+// بيانات الرؤية والرسالة والقيم
+const missionData = {
+  vision: "أن نكون منارة للتميز التعليمي والتربوي في الولاية الشمالية، ونساهم في بناء جيل واعٍ ومؤهل لقيادة المستقبل.",
+  mission: "تقديم بيئة تعليمية محفزة وشاملة، تركز على الأخلاق والقيم، وتوظف أحدث المناهج والطرق التدريسية لإطلاق الإمكانات الكاملة لكل طالب.",
+  values: [
+    { name: "الإخلاص", icon: "💎", description: "التفاني في العمل وتقديم أعلى مستويات الجودة." },
+    { name: "الاحترام", icon: "🤝", description: "تعزيز الاحترام المتبادل بين الطلاب والمعلمين والمجتمع." },
+    { name: "التميز", icon: "🏆", description: "السعي المستمر لتحقيق الأفضل في كافة المجالات." },
+    { name: "التعاون", icon: "🧑‍🤝‍🧑", description: "العمل بروح الفريق لدعم نمو المجتمع المدرسي." },
+  ],
 };
 
 export default function AboutUs() {
   return (
     <Layout>
       <Head>
-        <title>عن المدرسة | مدرسة الإخلاص</title>
+        <title>عن المدرسة | {schoolName}</title>
       </Head>
 
-      <div style={styles.pageContainer}>
-        <header style={styles.header}>
-            <h1 style={styles.pageTitle}>عن مدرسة الإخلاص</h1>
-            <p style={styles.introText}>منذ [عام التأسيس] ونحن ملتزمون بالتميز في الولاية الشمالية.</p>
-        </header>
+      {/* 1. رأس الصفحة (Hero) */}
+      <header style={styles.header}>
+        <h1 style={styles.pageTitle}>👋 من نحن؟ (عن مدرسة الإخلاص)</h1>
+        <p style={styles.introText}>
+          تأسست مدرسة الإخلاص على مبدأ أن التعليم الجيد يبدأ بالقيم والأخلاق.
+        </p>
+      </header>
 
-        {/* Vision Section */}
-        <Section title="رؤيتنا" icon="🌟" color="#0056b3">
-            <p style={styles.visionText}>{schoolInfo.vision}</p>
-        </Section>
+      <div style={styles.contentContainer}>
+        {/* 2. قسم الرؤية والرسالة */}
+        <section style={styles.visionMissionSection}>
+          <VisionMissionCard 
+            icon="🌟" 
+            title="رؤيتنا" 
+            text={missionData.vision} 
+            color="#0056b3" 
+            isVision={true}
+          />
+          <VisionMissionCard 
+            icon="🎯" 
+            title="رسالتنا" 
+            text={missionData.mission} 
+            color="#28a745"
+            isVision={false}
+          />
+        </section>
 
-        {/* Mission Section */}
-        <Section title="رسالتنا" icon="🎯" color="#28a745">
-            <p style={styles.missionText}>{schoolInfo.mission}</p>
-        </Section>
-        
-        {/* History Section */}
-        <Section title="تاريخنا وموقعنا" icon="🏛️" color="#ffc107">
-            <p style={styles.historyText}>{schoolInfo.history.replace('[عام التأسيس]', '2005')}</p>
-            <p style={styles.historyLocation}><strong>الموقع:</strong> أبودوم، مروي، الولاية الشمالية.</p>
-        </Section>
+        {/* 3. قسم القيم الأساسية */}
+        <section style={styles.valuesSection}>
+          <h2 style={styles.sectionTitle}>قيمنا الأساسية</h2>
+          <p style={styles.sectionSubtitle}>هي المبادئ التي توجه كل عمل نقوم به داخل وخارج أسوار المدرسة.</p>
+          <div style={styles.valuesGrid}>
+            {missionData.values.map((value, index) => (
+              <ValueCard key={index} value={value} />
+            ))}
+          </div>
+        </section>
 
       </div>
     </Layout>
   );
 }
 
-const Section = ({ title, icon, color, children }) => (
-    <section style={styles.section}>
-        <h2 style={{...styles.sectionTitle, borderRightColor: color}}>
-            <span style={{color: color, marginRight: '10px'}}>{icon}</span>
-            {title}
-        </h2>
-        <div style={styles.sectionContent}>
-            {children}
+// 📌 مكون بطاقة الرؤية/الرسالة
+const VisionMissionCard = ({ icon, title, text, color, isVision }) => {
+    return (
+        <div style={{...styles.vmCard, borderLeft: `5px solid ${color}`}}>
+            <h3 style={{...styles.vmTitle, color: color}}>
+                <span style={styles.vmIcon}>{icon}</span> {title}
+            </h3>
+            <p style={styles.vmText}>{text}</p>
         </div>
-    </section>
-);
+    );
+};
 
+// 📌 مكون بطاقة القيمة
+const ValueCard = ({ value }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    return (
+        <div 
+            style={{...styles.valueCard, ...(isHovered ? styles.valueCardHover : {})}}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div style={styles.valueIcon}>{value.icon}</div>
+            <h4 style={styles.valueName}>{value.name}</h4>
+            <p style={styles.valueDescription}>{value.description}</p>
+        </div>
+    );
+};
 
+// 🎨 أنماط CSS المُحسنة
 const styles = {
-  pageContainer: {
-    direction: 'rtl',
-    textAlign: 'right',
-    maxWidth: '1000px',
-    margin: '0 auto',
-    padding: '0 20px 60px 20px',
-  },
   header: {
-    padding: '40px 0',
+    backgroundColor: '#eef2f7',
+    color: '#1b2a41',
+    padding: '50px 20px',
     textAlign: 'center',
-    borderBottom: '2px solid #eee',
-    marginBottom: '40px',
   },
   pageTitle: {
     fontSize: '3em',
-    color: '#0056b3',
     marginBottom: '10px',
+    color: '#0056b3',
+    fontWeight: '300',
   },
   introText: {
     fontSize: '1.2em',
-    color: '#6c757d',
+    fontWeight: '300',
+    opacity: 0.9,
+    maxWidth: '800px',
+    margin: '0 auto',
   },
-  section: {
-    marginBottom: '50px',
-    padding: '20px',
+  contentContainer: {
+    padding: '40px 20px',
+    maxWidth: '1200px',
+    margin: '0 auto',
+  },
+  // قسم الرؤية والرسالة
+  visionMissionSection: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '30px',
+    justifyContent: 'center',
+    marginBottom: '60px',
+  },
+  vmCard: {
     backgroundColor: 'white',
-    borderRadius: '10px',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+    padding: '30px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    flex: 1,
+    minWidth: '350px',
+    textAlign: 'right',
+  },
+  vmTitle: {
+    fontSize: '1.8em',
+    marginBottom: '15px',
+    fontWeight: '700',
+    display: 'flex',
+    alignItems: 'center',
+    borderBottom: '1px solid #eee',
+    paddingBottom: '10px',
+  },
+  vmIcon: {
+    fontSize: '1.5em',
+    marginRight: '10px',
+  },
+  vmText: {
+    fontSize: '1.1em',
+    lineHeight: '1.7',
+    color: '#555',
+  },
+  // قسم القيم الأساسية
+  valuesSection: {
+    textAlign: 'center',
+    marginBottom: '60px',
+    padding: '40px 0',
   },
   sectionTitle: {
-    fontSize: '2em',
-    fontWeight: '700',
-    borderRight: '5px solid', 
-    paddingRight: '15px',
-    marginBottom: '20px',
+    fontSize: '2.5em',
+    color: '#1b2a41',
+    marginBottom: '10px',
+    fontWeight: '300',
   },
-  sectionContent: {
+  sectionSubtitle: {
       fontSize: '1.1em',
-      lineHeight: '1.8',
-      color: '#444'
+      color: '#6c757d',
+      marginBottom: '40px',
+      fontWeight: '300',
   },
-  visionText: {
-      fontStyle: 'italic',
-      color: '#0056b3',
-      fontSize: '1.3em',
-      textAlign: 'center',
-      padding: '20px',
+  valuesGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: '30px',
+    marginTop: '30px',
   },
-  missionText: {
-      color: '#28a745',
-      fontSize: '1.2em',
-      padding: '10px 0',
-      fontWeight: '500',
+  valueCard: {
+    backgroundColor: 'white',
+    padding: '30px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    textAlign: 'center',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+    cursor: 'pointer',
+    borderBottom: '4px solid #ffc107',
   },
-  historyText: {
-      marginBottom: '15px',
+  valueCardHover: {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 12px 25px rgba(0, 0, 0, 0.15)',
   },
-  historyLocation: {
-      fontWeight: 'bold',
-      color: '#ffc107',
-  }
+  valueIcon: {
+    fontSize: '3em',
+    marginBottom: '15px',
+  },
+  valueName: {
+    fontSize: '1.5em',
+    color: '#0056b3',
+    fontWeight: '700',
+    marginBottom: '10px',
+  },
+  valueDescription: {
+    fontSize: '1em',
+    color: '#555',
+  },
 };
