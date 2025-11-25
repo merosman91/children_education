@@ -1,151 +1,220 @@
 // pages/news.js
 import Head from 'next/head';
 import Layout from '../components/Layout';
-import Link from 'next/link';
+import React, { useState } from 'react';
 
-const announcements = [
+const schoolName = "مدرسة الإخلاص";
+
+// بيانات الأخبار الافتراضية
+const dummyNews = [
   {
-    id: 3,
-    date: "25 نوفمبر 2025",
-    title: "بدء التسجيل للمرحلة الثانوية للعام الدراسي الجديد",
-    summary: "تعلن المدرسة عن فتح باب التسجيل للمرحلة الثانوية للبنين والبنات، الأولوية للمسجلين الأوائل. يرجى زيارة صفحة 'اتصل بنا' للتفاصيل.",
-    type: 'تسجيل',
-    color: '#007bff'
+    id: 1,
+    title: "حفل تكريم الطلاب المتفوقين للعام الدراسي 2024",
+    date: "25 نوفمبر 2024",
+    summary: "أقامت المدرسة حفلاً بهيجاً لتكريم الطلاب الأوائل في جميع المراحل، بحضور أولياء الأمور والشخصيات التعليمية.",
+    image: "[صورة لحفل التكريم]",
+    tag: "فعالية"
   },
   {
     id: 2,
-    date: "10 نوفمبر 2025",
-    title: "تفعيل تطبيق المذاكرة الإلكتروني",
-    summary: "تم إطلاق منصة الطالب الرقمية بشكل رسمي لمراجعة المقررات. يمكن لجميع الطلاب الوصول إليها عبر الرابط المخصص.",
-    type: 'تقني',
-    color: '#28a745'
+    title: "المدرسة تطلق منصة رقمية جديدة للمراجعات والاختبارات",
+    date: "10 نوفمبر 2024",
+    summary: "بهدف دعم التعلم عن بعد والمراجعة، تم إطلاق تطبيق المذاكرة الرقمي للوصول السهل للمقررات.",
+    image: "[صورة لشاشة التطبيق]",
+    tag: "إعلان"
   },
   {
-    id: 1,
-    date: "01 نوفمبر 2025",
-    title: "مواعيد اختبارات نهاية الفصل للمرحلة المتوسطة",
-    summary: "تم تحديد جداول الامتحانات النهائية للفصل الدراسي الأول للمرحلة المتوسطة. يرجى تحميل الجدول من بوابة الطالب.",
-    type: 'اختبارات',
-    color: '#dc3545'
+    id: 3,
+    title: "دورة تدريبية للمعلمين حول أساليب التدريس الحديثة",
+    date: "1 نوفمبر 2024",
+    summary: "شارك كادر المعلمين في دورة مكثفة لتبني أحدث الاستراتيجيات التعليمية المتمحورة حول الطالب.",
+    image: "[صورة للمعلمين في التدريب]",
+    tag: "تدريب"
   },
 ];
 
-export default function NewsPage() {
+export default function NewsAndEvents() {
   return (
     <Layout>
       <Head>
-        <title>الأخبار والإعلانات | مدرسة الإخلاص</title>
+        <title>الأخبار والفعاليات | {schoolName}</title>
       </Head>
 
-      <div style={styles.pageContainer}>
-        <header style={styles.header}>
-            <h1 style={styles.pageTitle}>🔔 الأخبار والإعلانات</h1>
-            <p style={styles.introText}>آخر المستجدات والإشعارات الهامة لطلابنا وأولياء الأمور.</p>
-        </header>
-        
-        <div style={styles.announcementsList}>
-            {announcements.map(item => (
-                <AnnouncementCard key={item.id} item={item} />
-            ))}
-            {announcements.length === 0 && (
-                <p style={styles.noNews}>لا توجد إعلانات حالياً.</p>
-            )}
+      {/* 1. رأس الصفحة (Hero) */}
+      <header style={styles.header}>
+        <h1 style={styles.pageTitle}>📢 أخبار وفعاليات المدرسة</h1>
+        <p style={styles.introText}>
+          تابع آخر المستجدات والفعاليات والاحتفالات التي تقام في مدرسة الإخلاص.
+        </p>
+      </header>
+
+      {/* 2. قسم الأخبار */}
+      <section style={styles.newsSection}>
+        <div style={styles.newsGrid}>
+          {dummyNews.map((item) => (
+            <NewsCard key={item.id} news={item} />
+          ))}
         </div>
-        
-      </div>
+        {/* رابط افتراضي لأرشيف الأخبار */}
+        <div style={styles.archiveLinkContainer}>
+            <Link href="#" style={styles.archiveLink}>
+                تصفح أرشيف الأخبار القديمة »
+            </Link>
+        </div>
+      </section>
     </Layout>
   );
 }
 
-const AnnouncementCard = ({ item }) => (
-    <div style={styles.card}>
-        <div style={styles.cardHeader}>
-            <span style={{...styles.tag, backgroundColor: item.color}}>{item.type}</span>
-            <span style={styles.date}>{item.date}</span>
-        </div>
-        <h3 style={styles.cardTitle}>{item.title}</h3>
-        <p style={styles.cardSummary}>{item.summary}</p>
-        <Link href="/contact" style={styles.readMore}>للتفاصيل أو الاستفسار &rarr;</Link>
-    </div>
-);
+// 📌 مكون بطاقة الخبر
+const NewsCard = ({ news }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    
+    // محاكاة للصورة باستخدام اللون
+    const imagePlaceholderStyle = {
+        ...styles.newsImagePlaceholder,
+        backgroundColor: news.tag === 'فعالية' ? '#007bff20' : news.tag === 'إعلان' ? '#28a74520' : '#ffc10720',
+        color: news.tag === 'فعالية' ? '#007bff' : news.tag === 'إعلان' ? '#28a745' : '#ffc107',
+    };
 
+    return (
+        <div 
+            style={{...styles.newsCard, ...(isHovered ? styles.newsCardHover : {})}}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div style={imagePlaceholderStyle}>
+                {news.tag === 'فعالية' && '📸'}
+                {news.tag === 'إعلان' && '📣'}
+                {news.tag === 'تدريب' && '📝'}
+            </div>
+            <div style={styles.cardContent}>
+                <span style={styles.newsTag}>{news.tag}</span>
+                <h3 style={styles.newsTitle}>{news.title}</h3>
+                <p style={styles.newsSummary}>{news.summary}</p>
+                <div style={styles.newsFooter}>
+                    <span style={styles.newsDate}>🗓️ {news.date}</span>
+                    <Link href="#" style={styles.readMoreLink}>اقرأ المزيد</Link>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// 🎨 أنماط CSS المُحسنة
 const styles = {
-  pageContainer: {
-    direction: 'rtl',
-    textAlign: 'right',
-    maxWidth: '900px',
-    margin: '0 auto',
-    padding: '0 20px 60px 20px',
-  },
   header: {
-    padding: '40px 0',
+    backgroundColor: '#eef2f7',
+    color: '#1b2a41',
+    padding: '50px 20px',
     textAlign: 'center',
-    marginBottom: '40px',
   },
   pageTitle: {
     fontSize: '3em',
-    color: '#0056b3',
     marginBottom: '10px',
+    color: '#0056b3',
+    fontWeight: '300',
   },
   introText: {
     fontSize: '1.2em',
-    color: '#6c757d',
+    fontWeight: '300',
+    opacity: 0.9,
+    maxWidth: '800px',
+    margin: '0 auto',
   },
-  announcementsList: {
+  newsSection: {
+    padding: '60px 20px',
+    maxWidth: '1200px',
+    margin: '0 auto',
+  },
+  newsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+    gap: '40px',
+    marginBottom: '40px',
+  },
+  newsCard: {
+    backgroundColor: 'white',
+    borderRadius: '12px',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    overflow: 'hidden',
+    transition: 'transform 0.3s, box-shadow 0.3s',
+    cursor: 'pointer',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  newsCardHover: {
+      transform: 'translateY(-5px)',
+      boxShadow: '0 15px 35px rgba(0, 0, 0, 0.15)',
+  },
+  newsImagePlaceholder: {
+      width: '100%',
+      height: '200px',
       display: 'flex',
-      flexDirection: 'column',
-      gap: '25px',
-  },
-  card: {
-      backgroundColor: 'white',
-      padding: '25px',
-      borderRadius: '10px',
-      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.08)',
-      borderRight: '5px solid #0056b3',
-  },
-  cardHeader: {
-      display: 'flex',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: '10px',
-      borderBottom: '1px dashed #eee',
-      paddingBottom: '10px',
-  },
-  tag: {
-      color: 'white',
-      padding: '4px 12px',
-      borderRadius: '20px',
-      fontSize: '0.85em',
+      fontSize: '4em',
       fontWeight: 'bold',
   },
-  date: {
-      fontSize: '0.9em',
-      color: '#6c757d',
+  cardContent: {
+      padding: '25px',
+      textAlign: 'right',
+      flexGrow: 1,
   },
-  cardTitle: {
-      fontSize: '1.5em',
+  newsTag: {
+      display: 'inline-block',
+      backgroundColor: '#f0f0f0',
       color: '#333',
+      padding: '5px 15px',
+      borderRadius: '20px',
+      fontSize: '0.8em',
+      fontWeight: 'bold',
       marginBottom: '10px',
   },
-  cardSummary: {
+  newsTitle: {
+      fontSize: '1.6em',
+      color: '#1b2a41',
+      fontWeight: '700',
+      marginBottom: '10px',
+      minHeight: '40px',
+  },
+  newsSummary: {
       fontSize: '1em',
       color: '#555',
       lineHeight: '1.6',
-      marginBottom: '15px',
+      marginBottom: '20px',
   },
-  readMore: {
+  newsFooter: {
+      marginTop: 'auto',
+      paddingTop: '15px',
+      borderTop: '1px solid #eee',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+  },
+  newsDate: {
+      fontSize: '0.9em',
+      color: '#6c757d',
+  },
+  readMoreLink: {
       color: '#0056b3',
       textDecoration: 'none',
       fontWeight: 'bold',
-      fontSize: '0.95em',
-      display: 'block',
-      textAlign: 'left',
+      transition: 'color 0.2s',
   },
-  noNews: {
+  archiveLinkContainer: {
       textAlign: 'center',
-      fontSize: '1.5em',
-      color: '#aaa',
-      padding: '50px 0',
-  }
+      marginTop: '20px',
+  },
+  archiveLink: {
+      fontSize: '1.1em',
+      color: '#0056b3',
+      textDecoration: 'none',
+      fontWeight: 'bold',
+      padding: '10px 20px',
+      border: '1px solid #0056b3',
+      borderRadius: '8px',
+      transition: 'background-color 0.3s, color 0.3s',
+  },
 };
- 
