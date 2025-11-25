@@ -11,7 +11,9 @@ const schoolData = {
   whatsappLink: "https://wa.me/249921027104", 
   email: "info@alekhlas-school.edu.sd", 
   address: "منطقة أبودوم، مدينة مروي، الولاية الشمالية، السودان.",
-  mapEmbedUrl: "http://googleusercontent.com/maps/embed?pb=!1m18!1m12!1m3!1d15446.40209635032!2d31.8797148!3d18.4283996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x143c7438e3e4a9e5%3A0x629c19356885368a!2sMerowe%2C%20Sudan!5e0!3m2!1sen!2sae!4v1703606400000!5m2!1sen!2sae", 
+  
+  // 📍 تم تحديث هذا الرابط ليطابق الإحداثيات: 18°27'08.4"N 31°48'53.7"E
+  mapEmbedUrl: "http://googleusercontent.com/maps/embed?pb=!1m18!1m12!1m3!1d467.42445100000003!2d31.814917400000004!3d18.4523334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDI3JzA4LjQiTiAzMcKwNDgnNTMuNyJF!5e0!3m2!1sen!2ssa!4v1700000000000!5m2!1sen!2ssa", 
 };
 
 export default function ContactUs() {
@@ -32,7 +34,7 @@ export default function ContactUs() {
         <div style={styles.contactDetails}>
           <ContactItem icon="🟢" title="تواصل عبر الواتساب" value={`+249 ${schoolData.whatsappNumber}`} link={schoolData.whatsappLink} isWhatsapp={true} />
           <ContactItem icon="✉️" title="البريد الإلكتروني" value={schoolData.email} link={`mailto:${schoolData.email}`} />
-          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={`http://googleusercontent.com/maps.google.com/3{encodeURIComponent(schoolData.address)}`} isAddress={true} />
+          <ContactItem icon="📍" title="عنوان المدرسة" value={schoolData.address} link={`http://googleusercontent.com/maps.google.com/4{encodeURIComponent(schoolData.address)}`} isAddress={true} />
         </div>
 
         <hr style={styles.divider} />
@@ -60,7 +62,7 @@ export default function ContactUs() {
   );
 }
 
-// 📌 مكون لبطاقة تفاصيل الاتصال التفاعلية
+// مكون لبطاقة تفاصيل الاتصال التفاعلية
 const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress = false }) => {
     const [isHovered, setIsHovered] = useState(false);
     return (
@@ -82,7 +84,7 @@ const ContactItem = ({ icon, title, value, link, isWhatsapp = false, isAddress =
     );
 };
 
-// 📌 مكون نموذج الإرسال عبر الواتساب التفاعلي
+// مكون نموذج الإرسال عبر الواتساب التفاعلي
 const WhatsappForm = ({ whatsappLink }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -92,7 +94,8 @@ const WhatsappForm = ({ whatsappLink }) => {
         
         const fullMessage = `*رسالة استفسار من الموقع الإلكتروني:*\nالاسم: ${name}\nرقم الهاتف: ${phone}\nالرسالة: ${message}`;
         const encodedMessage = encodeURIComponent(fullMessage.trim());
-        const whatsappUrl = `${whatsappLink}?text=${encodedMessage}`;
+        const baseUrl = whatsappLink; 
+        const whatsappUrl = `${baseUrl}?text=${encodedMessage}`;
         
         window.open(whatsappUrl, '_blank');
     };
@@ -118,7 +121,7 @@ const WhatsappForm = ({ whatsappLink }) => {
 };
 
 
-// 🎨 أنماط CSS المدمجة
+// أنماط CSS المدمجة
 const styles = {
   header: {
     backgroundColor: '#eef2f7',
@@ -160,7 +163,7 @@ const styles = {
     transition: 'transform 0.3s, box-shadow 0.3s',
     cursor: 'pointer',
   },
-  itemCardHover: { // تأثير الـ Hover
+  itemCardHover: {
       transform: 'translateY(-3px)',
       boxShadow: '0 8px 15px rgba(0, 0, 0, 0.15)',
   },
@@ -241,7 +244,7 @@ const styles = {
     cursor: 'pointer',
     transition: 'background-color 0.3s, transform 0.2s',
   },
-  whatsappButtonHover: { // تأثير الـ Hover
+  whatsappButtonHover: {
       backgroundColor: '#1e8f49',
       transform: 'scale(1.02)',
       boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
