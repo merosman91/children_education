@@ -1,7 +1,8 @@
 // pages/academic-programs.js
 import Head from 'next/head';
 import Link from 'next/link';
-import Layout from '../components/Layout'; // 🚨 تم إضافة استيراد Layout
+import Layout from '../components/Layout';
+import React, { useState } from 'react';
 
 const schoolName = "مدرسة الإخلاص";
 
@@ -32,15 +33,16 @@ const academicStages = [
 
 export default function AcademicPrograms() {
   return (
-    <Layout> {/* 🚨 تغليف المحتوى بالـ Layout */}
+    <Layout>
       <Head>
         <title>البرامج الأكاديمية | {schoolName}</title>
       </Head>
 
       <header style={styles.header}>
-        {/* 🚨 تم حذف رابط العودة للرئيسية لأنه موجود في الـ Navbar */}
         <h1 style={styles.pageTitle}>البرامج والمراحل التعليمية</h1>
-        <p style={styles.introText}>توفر مدرسة الإخلاص تعليمًا متكاملاً للبنين والبنات عبر جميع المراحل.</p>
+        <p style={styles.introText}>
+          توفر مدرسة الإخلاص تعليمًا متكاملاً للبنين والبنات عبر جميع المراحل، وفق أرقى المعايير.
+        </p>
       </header>
 
       <section style={styles.stagesContainer}>
@@ -49,79 +51,105 @@ export default function AcademicPrograms() {
         ))}
       </section>
 
-      <div style={styles.appLinkContainer}>
-        <Link href="/study-app" style={styles.appLink}>
-          انقر هنا للذهاب إلى تطبيق المذاكرة والمراجعة &rarr;
-        </Link>
-      </div>
-
-      {/* 🚨 تم حذف التذييل (Footer) لأنه موجود الآن في Layout */}
+      <section style={styles.callToActionSection}>
+        <h2 style={styles.callToActionTitle}>جاهز للبدء في مسيرتك التعليمية؟</h2>
+        <p style={styles.callToActionText}>تواصل معنا اليوم لمعرفة شروط التسجيل للعام الدراسي الجديد.</p>
+        <InteractiveLink href="/contact" buttonStyle={styles.contactButton} hoverStyle={styles.contactButtonHover}>
+          للتسجيل والاستفسار اضغط هنا 📞
+        </InteractiveLink>
+      </section>
     </Layout>
   );
 }
 
-// مكون البطاقة للمرحلة التعليمية
-const StageCard = ({ stage }) => (
-  <div style={{...styles.card, borderTop: `5px solid ${stage.color}`}}>
-    <div style={styles.cardHeader}>
-        <span style={{fontSize: '2.5em', marginRight: '15px'}}>{stage.icon}</span>
-        <h2 style={{...styles.cardTitle, color: stage.color}}>{stage.title}</h2>
-    </div>
-    <p style={styles.cardYears}>({stage.years})</p>
-    <p style={styles.cardFocus}>{stage.focus}</p>
-    
-    <div style={styles.genderContainer}>
-        <span style={styles.genderBadge}>بنين</span>
-        <span style={styles.genderBadge}>بنات</span>
-    </div>
-
-    <Link href="/contact" style={styles.contactButton}>
-        للتسجيل والاستفسار
+// 📌 مكون الرابط التفاعلي (مُعاد استخدامه)
+const InteractiveLink = ({ href, children, buttonStyle, hoverStyle }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  return (
+    <Link
+      href={href}
+      style={{ ...buttonStyle, ...(isHovered ? hoverStyle : {}) }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {children}
     </Link>
-  </div>
-);
+  );
+};
 
-// 🎨 أنماط CSS المدمجة (تم حذف أنماط Footer و Font)
+// 📌 مكون البطاقة للمرحلة التعليمية (مُحسن)
+const StageCard = ({ stage }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    return (
+      <div
+        style={{
+          ...styles.card,
+          borderLeft: `5px solid ${stage.color}`, // تم تغيير Border Top إلى Left
+          ...(isHovered ? styles.cardHover : {})
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div style={styles.cardHeader}>
+            <span style={{fontSize: '2.5em', marginRight: '15px'}}>{stage.icon}</span>
+            <h2 style={{...styles.cardTitle, color: stage.color}}>{stage.title}</h2>
+        </div>
+        <p style={styles.cardYears}>({stage.years})</p>
+        <p style={styles.cardFocus}>{stage.focus}</p>
+
+        <div style={styles.genderContainer}>
+            <span style={styles.genderBadge}>بنين</span>
+            <span style={styles.genderBadge}>بنات</span>
+        </div>
+
+      </div>
+    );
+};
+
+// 🎨 أنماط CSS المُحسنة
 const styles = {
-  // تم حذف fontFamily و direction و minHeight لأنهما في Layout
-  container: {
-    backgroundColor: '#f8f9fa',
-    paddingBottom: '50px',
-  },
   header: {
-    backgroundColor: '#eef2f7', // لون فاتح لتمييزه عن الـ Navbar
-    color: '#333',
-    padding: '30px 20px 50px 20px',
+    backgroundColor: '#eef2f7',
+    color: '#1b2a41',
+    padding: '50px 20px',
     textAlign: 'center',
-    position: 'relative',
   },
   pageTitle: {
-    fontSize: '2.5em',
+    fontSize: '3em',
     marginBottom: '10px',
     color: '#0056b3',
+    fontWeight: '300', // خط رفيع
   },
   introText: {
     fontSize: '1.2em',
     fontWeight: '300',
     opacity: 0.9,
+    maxWidth: '800px',
+    margin: '0 auto',
   },
   stagesContainer: {
     display: 'flex',
     justifyContent: 'center',
     gap: '30px',
     flexWrap: 'wrap',
-    marginTop: '-30px', 
-    padding: '0 20px',
+    padding: '60px 20px',
   },
   card: {
     backgroundColor: 'white',
     borderRadius: '12px',
-    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
+    // ظل ناعم وحديث
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
     padding: '35px',
     width: '350px',
-    transition: 'transform 0.3s',
+    transition: 'transform 0.3s, box-shadow 0.3s',
     textAlign: 'right',
+    cursor: 'pointer',
     zIndex: 10,
+    borderRight: 'none', // لا نريد Border Right
+  },
+  cardHover: {
+    transform: 'translateY(-8px)',
+    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.15)',
   },
   cardHeader: {
       display: 'flex',
@@ -133,6 +161,7 @@ const styles = {
   cardTitle: {
     fontSize: '1.8em',
     marginBottom: '0',
+    fontWeight: '700',
   },
   cardYears: {
     fontSize: '1.1em',
@@ -161,30 +190,39 @@ const styles = {
       fontWeight: 'bold',
       color: '#333'
   },
+  // قسم الدعوة للعمل الجديد
+  callToActionSection: {
+    backgroundColor: '#1b2a41',
+    color: 'white',
+    padding: '60px 20px',
+    textAlign: 'center',
+    marginTop: '50px',
+  },
+  callToActionTitle: {
+      fontSize: '2.5em',
+      marginBottom: '10px',
+      fontWeight: '300',
+  },
+  callToActionText: {
+      fontSize: '1.2em',
+      opacity: 0.9,
+      marginBottom: '30px',
+  },
   contactButton: {
     display: 'inline-block',
-    marginTop: '20px',
-    padding: '10px 20px',
+    padding: '15px 40px',
     backgroundColor: '#ffc107',
-    color: '#333',
+    color: '#1b2a41',
     textDecoration: 'none',
     borderRadius: '8px',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s',
+    fontSize: '1.3em',
+    fontWeight: '700',
+    transition: 'background-color 0.3s, transform 0.2s',
+    boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
   },
-  appLinkContainer: {
-      textAlign: 'center',
-      marginTop: '40px',
+  contactButtonHover: {
+      backgroundColor: '#ffa000',
+      transform: 'translateY(-2px)',
+      boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
   },
-  appLink: {
-    display: 'inline-block',
-    padding: '15px 30px',
-    backgroundColor: '#6f42c1', 
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    fontSize: '1.1em',
-    fontWeight: 'bold',
-    transition: 'background-color 0.3s',
-  }
 };
