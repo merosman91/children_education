@@ -1,7 +1,7 @@
 // pages/academic-programs.js
 import Head from 'next/head';
 import Link from 'next/link';
-import Layout from '../components/Layout';
+import Layout from '../components/Layout'; // 🚨 تم إضافة استيراد Layout
 
 const schoolName = "مدرسة الإخلاص";
 
@@ -12,14 +12,14 @@ const academicStages = [
     years: "الصفوف 1 - 6",
     focus: "بناء أساس قوي في القراءة، الكتابة، والحساب. تطوير المهارات الاجتماعية والقيم التربوية.",
     color: '#007bff', // أزرق
-    icon: '📚'
+    icon: '🎒'
   },
   {
     title: "المرحلة المتوسطة",
     years: "الصفوف 7 - 9",
     focus: "التعمق في المواد العلمية والأدبية، وتنمية التفكير النقدي، والتحضير للاختيار التخصصي.",
     color: '#28a745', // أخضر
-    icon: '🔬'
+    icon: '📚'
   },
   {
     title: "المرحلة الثانوية",
@@ -32,13 +32,13 @@ const academicStages = [
 
 export default function AcademicPrograms() {
   return (
-    <div style={styles.container}>
+    <Layout> {/* 🚨 تغليف المحتوى بالـ Layout */}
       <Head>
         <title>البرامج الأكاديمية | {schoolName}</title>
       </Head>
 
       <header style={styles.header}>
-        <Link href="/" style={styles.homeLink}>&larr; العودة للرئيسية</Link>
+        {/* 🚨 تم حذف رابط العودة للرئيسية لأنه موجود في الـ Navbar */}
         <h1 style={styles.pageTitle}>البرامج والمراحل التعليمية</h1>
         <p style={styles.introText}>توفر مدرسة الإخلاص تعليمًا متكاملاً للبنين والبنات عبر جميع المراحل.</p>
       </header>
@@ -49,12 +49,14 @@ export default function AcademicPrograms() {
         ))}
       </section>
 
-      <footer style={styles.footer}>
+      <div style={styles.appLinkContainer}>
         <Link href="/study-app" style={styles.appLink}>
           انقر هنا للذهاب إلى تطبيق المذاكرة والمراجعة &rarr;
         </Link>
-      </footer>
-    </div>
+      </div>
+
+      {/* 🚨 تم حذف التذييل (Footer) لأنه موجود الآن في Layout */}
+    </Layout>
   );
 }
 
@@ -79,35 +81,24 @@ const StageCard = ({ stage }) => (
   </div>
 );
 
-// 🎨 أنماط CSS المدمجة
+// 🎨 أنماط CSS المدمجة (تم حذف أنماط Footer و Font)
 const styles = {
+  // تم حذف fontFamily و direction و minHeight لأنهما في Layout
   container: {
-    fontFamily: 'Tahoma, Arial, sans-serif',
-    direction: 'rtl',
-    textAlign: 'right',
     backgroundColor: '#f8f9fa',
-    minHeight: '100vh',
     paddingBottom: '50px',
   },
   header: {
-    backgroundColor: '#007bff',
-    color: 'white',
+    backgroundColor: '#eef2f7', // لون فاتح لتمييزه عن الـ Navbar
+    color: '#333',
     padding: '30px 20px 50px 20px',
     textAlign: 'center',
     position: 'relative',
   },
-  homeLink: {
-    position: 'absolute',
-    top: '15px',
-    right: '20px',
-    color: 'white',
-    textDecoration: 'none',
-    fontSize: '1em',
-    opacity: 0.8,
-  },
   pageTitle: {
     fontSize: '2.5em',
     marginBottom: '10px',
+    color: '#0056b3',
   },
   introText: {
     fontSize: '1.2em',
@@ -119,7 +110,7 @@ const styles = {
     justifyContent: 'center',
     gap: '30px',
     flexWrap: 'wrap',
-    marginTop: '-30px', // سحب البطاقات للأعلى جزئياً
+    marginTop: '-30px', 
     padding: '0 20px',
   },
   card: {
@@ -181,14 +172,14 @@ const styles = {
     fontWeight: 'bold',
     transition: 'background-color 0.3s',
   },
-  footer: {
+  appLinkContainer: {
       textAlign: 'center',
       marginTop: '40px',
   },
   appLink: {
     display: 'inline-block',
     padding: '15px 30px',
-    backgroundColor: '#6f42c1', // بنفسجي
+    backgroundColor: '#6f42c1', 
     color: 'white',
     textDecoration: 'none',
     borderRadius: '8px',
