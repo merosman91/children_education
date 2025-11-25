@@ -1,6 +1,8 @@
 // components/Layout.js
 import Head from 'next/head';
 import Link from 'next/link';
+// 🚨 تأكد أن اسم الملف هنا يطابق اسم الملف في المكونات (Navbar)
+import Navbar from './Navbar'; 
 
 // البيانات الأساسية
 const schoolData = {
@@ -13,23 +15,22 @@ export default function Layout({ children }) {
   return (
     <div style={styles.appContainer}>
       <Head>
-        {/* إضافة خط Cairo من Google Fonts */}
         <link rel="preconnect" href="http://fonts.googleapis.com" />
         <link rel="preconnect" href="http://fonts.gstatic.com" crossOrigin="true" />
         <link href="http://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
-        {/* viewport لتحسين العرض على الهاتف */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      {/* شريط التنقل (Navbar) */}
-      {/* Navbar يبقى كما هو في ملفه، لكنه سيتأثر بالخط الجديد */}
+      {/* 🚨 تأكد أن Navbar يتم عرضه هنا! */}
+      <Navbar /> 
       
       <main style={styles.mainContent}>
         {children}
       </main>
 
-      {/* التذييل (Footer) */}
+      {/* التذييل (Footer) - يبقى كما هو */}
       <footer style={styles.footer}>
+         {/* محتوى Footer */}
         <div style={styles.footerContainer}>
             <div style={styles.footerSection}>
                 <h3 style={styles.footerTitle}>مدرسة الإخلاص</h3>
@@ -59,7 +60,7 @@ export default function Layout({ children }) {
   );
 }
 
-// 🎨 أنماط CSS المُحسنة
+// 🎨 أنماط CSS (لم تتغير)
 const styles = {
   appContainer: {
     fontFamily: "'Cairo', sans-serif",
@@ -67,17 +68,15 @@ const styles = {
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#ffffff', // خلفية بيضاء نظيفة
+    backgroundColor: '#ffffff',
     color: '#333333',
   },
   mainContent: {
     flexGrow: 1,
   },
-  
-  // 🔽 أنماط التذييل (Footer) المُحسنة 🔽
   footer: {
-    backgroundColor: '#1b2a41', // أزرق داكن جديد (Navy Blue)
-    color: '#f0f4f8', // لون فاتح للنص
+    backgroundColor: '#1b2a41',
+    color: '#f0f4f8',
     padding: '40px 20px 20px 20px',
     marginTop: '50px',
     boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
@@ -99,7 +98,7 @@ const styles = {
   footerTitle: {
     fontSize: '1.4em',
     marginBottom: '15px',
-    color: '#ffc107', // لون ذهبي لتسليط الضوء
+    color: '#ffc107',
     fontWeight: '700',
     borderRight: '3px solid #ffc107',
     paddingRight: '10px',
