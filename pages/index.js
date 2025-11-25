@@ -19,47 +19,44 @@ export default function Home() {
 
       {/* 1. رأس الصفحة (Hero Section) */}
       <header style={styles.header}>
-        <h1 style={styles.title}>{schoolData.name} 🇸🇩</h1>
-        <p style={styles.subtitle}>
-          مدرسة بالمراحل **الابتدائية، المتوسطة، والثانوية** (بنين وبنات).
-        </p>
-        <p style={styles.location}>{schoolData.location}</p>
-        
-        {/* زر التوجيه للتطبيق التعليمي */}
-        <Link href="/academic-programs" style={styles.ctaButton}>
-          استكشف برامجنا الأكاديمية
-        </Link>
+        <div style={styles.headerContent}>
+            <div style={styles.logoSection}>
+                <span style={styles.schoolLogo}>🏫</span>
+                <h1 style={styles.title}>{schoolData.name} <span style={{fontSize: '0.8em'}}>🇸🇩</span></h1>
+            </div>
+            
+            <p style={styles.subtitle}>
+              مدرسة بالمراحل <span style={styles.highlightText}>الابتدائية، المتوسطة، والثانوية</span> (بنين وبنات).
+            </p>
+            <p style={styles.location}>{schoolData.location}</p>
+            
+            {/* زر التوجيه للتطبيق التعليمي */}
+            <Link href="/academic-programs" style={styles.ctaButton}>
+              استكشف برامجنا الأكاديمية
+            </Link>
+        </div>
       </header>
 
       {/* 2. قسم المراحل التعليمية */}
       <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>المراحل التعليمية</h2>
+        <h2 style={styles.sectionTitle}>مراحلنا التعليمية</h2>
         <div style={styles.cardsContainer}>
-          <StageCard title="المرحلة الابتدائية" icon="🎒" description="بناء الأساس المعرفي والتربوي." />
-          <StageCard title="المرحلة المتوسطة" icon="📚" description="تنمية المهارات الأكاديمية والإبداعية." />
-          <StageCard title="المرحلة الثانوية" icon="🎓" description="التحضير للجامعة والمستقبل المهني." />
+          <StageCard title="المرحلة الابتدائية" icon="🎒" description="بناء الأساس المعرفي والتربوي." color="#007bff" />
+          <StageCard title="المرحلة المتوسطة" icon="📚" description="تنمية المهارات الأكاديمية والإبداعية." color="#28a745" />
+          <StageCard title="المرحلة الثانوية" icon="🎓" description="التحضير للجامعة والمستقبل المهني." color="#ffc107" />
         </div>
       </section>
 
-      {/* 3. قسم رسالة المدرسة (Motto) */}
-      <section style={{...styles.section, backgroundColor: '#e9eff4'}}>
-        <h2 style={styles.sectionTitle}>رسالتنا وقيمنا</h2>
-        <blockquote style={styles.blockquote}>
-          "{schoolData.motto}"
-        </blockquote>
-        <p style={styles.mottoText}>نحن ملتزمون بتوفير بيئة تعليمية آمنة وفعالة لأبناء الولاية الشمالية.</p>
-      </section>
-
-      {/* 4. رابط تطبيق المذاكرة */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>تطبيق المراجعة والمذاكرة الرقمي</h2>
+      {/* 3. رابط تطبيق المذاكرة */}
+      <section style={{...styles.section, backgroundColor: '#f0f4f8'}}>
+        <h2 style={styles.sectionTitle}>منصة الطالب الرقمية</h2>
         <p style={styles.mottoText}>نوفر لطلابنا منصة رقمية لمراجعة المقررات الدراسية واختبار فهمهم في جميع المواد.</p>
         <Link href="/study-app" style={styles.secondaryButton}>
-          اذهب لتطبيق المذاكرة
+          انطلق إلى تطبيق المذاكرة <span style={{fontSize: '1.2em'}}>🚀</span>
         </Link>
       </section>
 
-      {/* 5. تذييل الصفحة */}
+      {/* 4. تذييل الصفحة */}
       <footer style={styles.footer}>
         <p>&copy; {new Date().getFullYear()} {schoolData.name}. جميع الحقوق محفوظة.</p>
         <p>مروي، أبودوم | الولاية الشمالية</p>
@@ -69,124 +66,135 @@ export default function Home() {
 }
 
 // مكون بطاقة المرحلة التعليمية (Component)
-const StageCard = ({ title, icon, description }) => (
-  <div style={styles.card}>
+const StageCard = ({ title, icon, description, color }) => (
+  <div style={{...styles.card, borderTopColor: color}}>
     <div style={styles.cardIcon}>{icon}</div>
-    <h3 style={styles.cardTitle}>{title}</h3>
+    <h3 style={{...styles.cardTitle, color: color}}>{title}</h3>
     <p style={styles.cardDescription}>{description}</p>
   </div>
 );
 
-// 🎨 أنماط CSS المدمجة (للتوضيح)
+// 🎨 أنماط CSS المدمجة
 const styles = {
   container: {
-    fontFamily: 'Tahoma, Arial, sans-serif',
+    fontFamily: 'Cairo, Tahoma, Arial, sans-serif', // استخدام خط عربي أفضل
     direction: 'rtl',
     textAlign: 'right',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#ffffff', // خلفية بيضاء
     minHeight: '100vh',
     color: '#333',
   },
   header: {
-    backgroundColor: '#007bff', // لون أزرق جذاب
+    backgroundColor: '#0056b3', // لون أزرق غامق أقوى
     color: 'white',
     padding: '80px 20px',
     textAlign: 'center',
   },
+  headerContent: {
+      maxWidth: '900px',
+      margin: '0 auto',
+  },
+  logoSection: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: '20px',
+  },
+  schoolLogo: {
+      fontSize: '4em',
+      marginRight: '20px',
+      transform: 'rotateY(180deg)'
+  },
   title: {
-    fontSize: '3em',
-    marginBottom: '10px',
+    fontSize: '3.5em',
+    marginBottom: '5px',
+    fontWeight: '800', // خط أكثر وضوحًا
   },
   subtitle: {
-    fontSize: '1.5em',
+    fontSize: '1.8em',
     fontWeight: '300',
+    marginBottom: '15px',
+  },
+  highlightText: {
+    fontWeight: 'bold',
+    color: '#ffc107', // لون ذهبي للتمييز
   },
   location: {
-    fontSize: '1.2em',
-    opacity: 0.8,
-    marginBottom: '30px',
+    fontSize: '1.1em',
+    opacity: 0.9,
+    marginBottom: '40px',
   },
   ctaButton: {
     display: 'inline-block',
     marginTop: '20px',
-    padding: '12px 25px',
-    backgroundColor: '#28a745', // أخضر جذاب
+    padding: '15px 35px',
+    backgroundColor: '#28a745', // أخضر للتسجيل/العمل
     color: 'white',
     textDecoration: 'none',
-    borderRadius: '8px',
-    fontSize: '1.1em',
+    borderRadius: '50px',
+    fontSize: '1.2em',
     fontWeight: 'bold',
-    transition: 'background-color 0.3s',
+    transition: 'background-color 0.3s, transform 0.2s',
   },
   section: {
     padding: '60px 20px',
     textAlign: 'center',
   },
   sectionTitle: {
-    fontSize: '2em',
-    color: '#007bff',
+    fontSize: '2.5em',
+    color: '#0056b3',
     marginBottom: '40px',
-    borderBottom: '3px solid #007bff',
-    display: 'inline-block',
-    paddingBottom: '5px',
+    fontWeight: '700',
   },
   cardsContainer: {
     display: 'flex',
     justifyContent: 'center',
-    gap: '30px',
+    gap: '40px',
     flexWrap: 'wrap',
   },
   card: {
     backgroundColor: 'white',
-    borderRadius: '10px',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+    borderRadius: '12px',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
     padding: '30px',
-    width: '300px',
+    width: '320px',
     transition: 'transform 0.3s',
-    borderTop: '5px solid #007bff',
+    borderTop: '8px solid',
   },
   cardIcon: {
-    fontSize: '3em',
+    fontSize: '3.5em',
     marginBottom: '15px',
   },
   cardTitle: {
-    color: '#333',
+    fontWeight: '700',
+    fontSize: '1.6em',
     marginBottom: '10px',
   },
   cardDescription: {
-    fontSize: '0.95em',
-    color: '#666',
-  },
-  blockquote: {
-    fontSize: '1.8em',
-    fontStyle: 'italic',
-    color: '#007bff',
-    margin: '30px auto',
-    maxWidth: '800px',
-    borderRight: '5px solid #28a745',
-    paddingRight: '15px',
-    lineHeight: '1.6',
+    fontSize: '1em',
+    color: '#555',
   },
   mottoText: {
-      fontSize: '1.1em',
-      color: '#555'
+      fontSize: '1.2em',
+      color: '#444'
   },
   secondaryButton: {
     display: 'inline-block',
     marginTop: '20px',
-    padding: '10px 20px',
+    padding: '15px 30px',
     backgroundColor: '#6c757d', // رمادي
     color: 'white',
     textDecoration: 'none',
-    borderRadius: '8px',
-    fontSize: '1em',
+    borderRadius: '50px',
+    fontSize: '1.1em',
+    fontWeight: 'bold',
     transition: 'background-color 0.3s',
   },
   footer: {
     backgroundColor: '#343a40',
     color: 'white',
     textAlign: 'center',
-    padding: '20px',
-    fontSize: '0.9em',
+    padding: '30px',
+    fontSize: '1em',
   },
 };
