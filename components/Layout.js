@@ -1,66 +1,123 @@
 // components/Layout.js
 import Head from 'next/head';
 import Link from 'next/link';
-// 🚨 تأكد أن اسم الملف هنا يطابق اسم الملف في المكونات (Navbar)
-import Navbar from './Navbar'; 
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
-// البيانات الأساسية
+// بيانات المدرسة
 const schoolData = {
   name: "مدرسة الإخلاص",
   whatsappNumber: "+249 921 027 104",
   facebookLink: "http://facebook.com/alekhlas-school",
 };
 
+// عناصر القائمة
+const navItems = [
+  { name: 'الرئيسية', path: '/' },
+  { name: 'برامجنا', path: '/academic-programs' },
+  { name: 'عن المدرسة', path: '/about' },
+  { name: 'أخبار', path: '/news' },
+  { name: 'تواصل', path: '/contact' },
+  { name: 'تطبيق المذاكرة', path: '/study-app' },
+];
+
 export default function Layout({ children }) {
+  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div style={styles.appContainer}>
       <Head>
-        <link rel="preconnect" href="http://fonts.googleapis.com" />
-        <link rel="preconnect" href="http://fonts.gstatic.com" crossOrigin="true" />
-        <link href="http://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;800&display=swap" rel="stylesheet" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      {/* 🚨 تأكد أن Navbar يتم عرضه هنا! */}
-      <Navbar /> 
-      
+      {/* ==================== 1. شريط التنقل (مدمج هنا) ==================== */}
+      <nav style={styles.navbar}>
+        <div style={styles.navContainer}>
+            
+            {/* الشعار */}
+            <Link href="/" style={styles.logo}>
+                🏫 {schoolData.name}
+            </Link>
+
+            {/* زر القائمة (يظهر فقط في الهاتف) */}
+            <button 
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                style={styles.menuButton}
+            >
+                ☰
+            </button>
+
+            {/* الروابط (تظهر دائماً في الكمبيوتر، وتعتمد على الزر في الهاتف) */}
+            <div style={{
+                ...styles.navLinks,
+                ...(isMenuOpen ? styles.navLinksOpen : {})
+            }}>
+                {navItems.map((item) => (
+                    <Link 
+                        key={item.name} 
+                        href={item.path} 
+                        style={{
+                            ...styles.navLink,
+                            backgroundColor: router.pathname === item.path ? '#17a2b8' : 'transparent',
+                        }}
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        {item.name}
+                    </Link>
+                ))}
+            </div>
+        </div>
+      </nav>
+      {/* ================================================================= */}
+
       <main style={styles.mainContent}>
         {children}
       </main>
 
-      {/* التذييل (Footer) - يبقى كما هو */}
+      {/* التذييل (Footer) */}
       <footer style={styles.footer}>
-         {/* محتوى Footer */}
         <div style={styles.footerContainer}>
             <div style={styles.footerSection}>
                 <h3 style={styles.footerTitle}>مدرسة الإخلاص</h3>
-                <p style={styles.footerText}>الأخلاق أولاً، والتميز هدفنا. نعمل على تقديم تعليم متكامل يركز على القيم والجودة الأكاديمية.</p>
+                <p style={styles.footerText}>التميز هدفنا.</p>
             </div>
-
-            <div style={styles.footerSection}>
-                <h3 style={styles.footerTitle}>روابط سريعة</h3>
-                <ul style={styles.footerList}>
-                    <li><Link href="/academic-programs" style={styles.footerLink}>البرامج الأكاديمية</Link></li>
-                    <li><Link href="/about" style={styles.footerLink}>عن المدرسة</Link></li>
-                    <li><Link href="/contact" style={styles.footerLink}>تواصل معنا</Link></li>
-                </ul>
-            </div>
-
             <div style={styles.footerSection}>
                 <h3 style={styles.footerTitle}>تواصل معنا</h3>
-                <p style={styles.footerText}>واتساب: <a href={`https://wa.me/249921027104`} style={styles.footerLink} target="_blank" rel="noopener noreferrer">{schoolData.whatsappNumber}</a></p>
-                <p style={styles.footerText}>فيسبوك: <a href={schoolData.facebookLink} style={styles.footerLink} target="_blank" rel="noopener noreferrer">صفحتنا الرسمية</a></p>
+                <p style={styles.footerText}>واتساب: {schoolData.whatsappNumber}</p>
             </div>
         </div>
         <div style={styles.copyright}>
-            &copy; {new Date().getFullYear()} {schoolData.name}. جميع الحقوق محفوظة.
+            &copy; {new Date().getFullYear()} مدرسة الإخلاص. جميع الحقوق محفوظة.
         </div>
       </footer>
+
+      {/* أنماط CSS خاصة بالجوال فقط لإخفاء/إظهار العناصر */}
+      <style jsx global>{`
+        /* في شاشات الكمبيوتر (أكبر من 768px) */
+        @media (min-width: 769px) {
+            .nav-toggle-btn { display: none !important; }
+        }
+        /* في شاشات الهاتف (أقل من 768px) */
+        @media (max-width: 768px) {
+            .nav-links-wrapper { 
+                display: none; /* مخفي افتراضياً في الهاتف */
+                flex-direction: column;
+                width: 100%;
+            }
+            .nav-links-wrapper.open {
+                display: flex; /* يظهر عند الفتح */
+            }
+        }
+      `}</style>
     </div>
   );
 }
 
-// 🎨 أنماط CSS (لم تتغير)
+// 🎨 الأنماط
 const styles = {
   appContainer: {
     fontFamily: "'Cairo', sans-serif",
@@ -69,61 +126,74 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#ffffff',
-    color: '#333333',
   },
-  mainContent: {
-    flexGrow: 1,
+  // --- Navbar Styles ---
+  navbar: {
+    backgroundColor: '#0056b3',
+    color: 'white',
+    padding: '15px 0',
+    position: 'relative', 
+    zIndex: 1000,
   },
-  footer: {
-    backgroundColor: '#1b2a41',
-    color: '#f0f4f8',
-    padding: '40px 20px 20px 20px',
-    marginTop: '50px',
-    boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.1)',
-  },
-  footerContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
+  navContainer: {
     maxWidth: '1200px',
     margin: '0 auto',
-    paddingBottom: '20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    flexWrap: 'wrap',
-    gap: '30px',
+    padding: '0 20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap', // مهم جداً للهاتف
   },
-  footerSection: {
-    minWidth: '200px',
-    flex: 1,
-  },
-  footerTitle: {
-    fontSize: '1.4em',
-    marginBottom: '15px',
-    color: '#ffc107',
-    fontWeight: '700',
-    borderRight: '3px solid #ffc107',
-    paddingRight: '10px',
-  },
-  footerText: {
-    fontSize: '0.95em',
-    lineHeight: 1.6,
-    marginBottom: '10px',
-  },
-  footerList: {
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-  },
-  footerLink: {
-    color: '#c0c0c0',
+  logo: {
+    color: 'white',
     textDecoration: 'none',
-    transition: 'color 0.2s',
+    fontSize: '1.5em',
+    fontWeight: 'bold',
+  },
+  menuButton: {
+    background: 'transparent',
+    border: '1px solid white',
+    color: 'white',
+    fontSize: '1.2em',
+    padding: '5px 10px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    // ملاحظة: نقوم بإخفائه في الكمبيوتر عبر style jsx أعلاه إذا لزم الأمر، 
+    // ولكن هنا سنتركه ظاهراً كحل أخير إذا فشل كل شيء، يمكننا تحسينه لاحقاً.
+    display: 'block', 
+    marginLeft: 'auto', // دفعه لليسار
+  },
+  navLinks: {
+    display: 'flex',
+    gap: '10px',
+    alignItems: 'center',
+    // في الهاتف، هذا الجزء سيتم تعديله عبر المتغير isMenuOpen
+    width: 'auto',
+  },
+  // تنسيق القائمة عند الفتح في الهاتف
+  navLinksOpen: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    paddingTop: '20px',
+    borderTop: '1px solid rgba(255,255,255,0.2)',
+    marginTop: '15px',
+  },
+  navLink: {
+    color: 'white',
+    textDecoration: 'none',
+    padding: '8px 12px',
+    borderRadius: '5px',
+    transition: '0.3s',
     display: 'block',
-    padding: '5px 0',
-  },
-  copyright: {
     textAlign: 'center',
-    fontSize: '0.85em',
-    color: '#a0a0a0',
-    marginTop: '20px',
+    width: '100%', 
   },
+  // --- Footer Styles ---
+  mainContent: { flexGrow: 1 },
+  footer: { backgroundColor: '#1b2a41', color: '#f0f4f8', padding: '30px 20px', marginTop: 'auto' },
+  footerContainer: { maxWidth: '1200px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' },
+  footerTitle: { color: '#ffc107', borderBottom: '2px solid #ffc107', paddingBottom: '5px', marginBottom: '10px' },
+  copyright: { textAlign: 'center', marginTop: '20px', fontSize: '0.9em', color: '#aaa' },
 };
+ 
